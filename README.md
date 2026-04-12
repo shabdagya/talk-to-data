@@ -1,32 +1,99 @@
-# Talk to Data
+<div align="center">
 
-> Ask questions about your data in plain English. Get instant, verified answers.
+<img src="https://img.shields.io/badge/Talk%20to%20Data-AI%20Analytics-6C63FF?style=for-the-badge&logo=databricks&logoColor=white" alt="Talk to Data"/>
 
----
+# 🗣️ Talk to Your Data
 
-## Overview
+**Ask questions about your data in plain English. Get instant, verified answers.**
 
-**Talk to Data** is an AI-powered data analytics web application that allows users to upload any CSV file and query it using natural language — no SQL knowledge required. It solves the problem of business users being locked out of data insights due to technical barriers by providing an intelligent, conversational interface over tabular data. The system automatically strips sensitive personal information before any data is processed by the AI. The intended users are business analysts, data teams, and non-technical stakeholders who need quick, trustworthy answers from datasets without writing code.
+<br/>
 
----
+[![Python](https://img.shields.io/badge/Python-3.10+-3776AB?style=flat-square&logo=python&logoColor=white)](https://python.org)
+[![React](https://img.shields.io/badge/React-Frontend-61DAFB?style=flat-square&logo=react&logoColor=black)](https://react.dev)
+[![FastAPI](https://img.shields.io/badge/FastAPI-Backend-009688?style=flat-square&logo=fastapi&logoColor=white)](https://fastapi.tiangolo.com)
+[![Groq](https://img.shields.io/badge/Groq-LLaMA%203.3%2070B-F55036?style=flat-square&logo=groq&logoColor=white)](https://groq.com)
+[![SQLite](https://img.shields.io/badge/SQLite-In--Memory-003B57?style=flat-square&logo=sqlite&logoColor=white)](https://sqlite.org)
 
-## Features
+<br/>
 
-- **Natural language querying** — Ask questions like "What was revenue by region in Q3?" and receive a precise, data-backed answer.
-- **Three-stage AI agent pipeline** — An Intent Clarifier interprets the question, an SQL Generator writes a safe query, and a Validator Explainer summarizes the result in plain English.
-- **Automatic PII detection & removal** — Columns with sensitive names (e.g. `email`, `name`, `phone`, `ssn`, `password`, `username`, `salary`) are automatically stripped before data enters the database or is seen by the AI.
-- **One-click Executive Summary** — A single button automatically runs four batch analytics queries and produces a professional 3-sentence business brief.
-- **Metric Definition Dictionary** — Business terms like "revenue" and "refund rate" are mapped to precise SQL formulas so the AI always uses consistent, correct definitions.
-- **SQL Transparency** — Every AI answer shows the exact SQL query it ran and a plain-English explanation of that query.
-- **Source Trust sidebar** — A dual-tab panel shows detected dataset columns alongside all formal metric definitions, so users can verify exactly how every calculation is made.
-- **SQL safety layer** — All generated SQL is sanitized to block destructive commands (`DROP`, `DELETE`, `UPDATE`, `INSERT`) before execution.
-- **Temporal date awareness** — The backend dynamically detects the date range of the uploaded dataset and injects it into the AI context to prevent hallucinated time references.
-- **Comparison queries** — The AI can produce side-by-side comparisons using SQL CTEs (e.g., "Region A vs Region B", "This month vs last month").
-- **Session reset** — The in-memory database can be wiped and a new file uploaded without restarting the server.
+[🚀 Quick Start](#-quick-start) • [✨ Features](#-features) • [🏗️ Architecture](#-architecture) • [📸 Screenshots](#-screenshots) • [🔌 API Reference](#-api-reference) • [⚠️ Limitations](#-limitations)
+
+</div>
 
 ---
 
-## Install and Run Instructions
+## 📸 Screenshots
+
+<div align="center">
+<table>
+<tr>
+<td align="center" width="50%">
+<img src="screenshot_upload.png" width="380" alt="Upload Screen"/>
+<br/><sub><b>📂 CSV Upload with PII Detection</b></sub>
+</td>
+<td align="center" width="50%">
+<img src="screenshot_dashboard.png" width="640" alt="Dashboard Screen"/>
+<br/><sub><b>💬 Chat Interface with Executive Summary</b></sub>
+</td>
+</tr>
+</table>
+</div>
+
+---
+
+## 👥 Team
+
+> **Gradient Descenters**
+
+| Role | Member |
+|------|--------|
+| 🧑‍💻 Team Leader | [@Shriya](https://github.com/shrrrriya) |
+| 🧑‍💻 Member | [@Shabdagya](https://github.com/shabdagya) |
+| 🧑‍💻 Member | [@Dhruv](https://github.com/Dhruv-Tuteja) |
+| 🧑‍💻 Member | [@Dhanu](https://github.com/dhanubansal777) |
+
+---
+
+## ✨ Features
+
+<table>
+<tr>
+<td>🗣️ <b>Natural Language Querying</b></td>
+<td>Ask questions like <i>"What was revenue by region in Q3?"</i> and get data-backed answers instantly — no SQL needed.</td>
+</tr>
+<tr>
+<td>🤖 <b>Three-Stage AI Agent Pipeline</b></td>
+<td>Intent Clarifier → SQL Generator → Validator/Explainer. Each agent specializes in one job for maximum accuracy.</td>
+</tr>
+<tr>
+<td>🔒 <b>Automatic PII Detection & Removal</b></td>
+<td>Columns like <code>email</code>, <code>ssn</code>, <code>password</code>, <code>phone</code> are stripped automatically before the AI ever sees them.</td>
+</tr>
+<tr>
+<td>✨ <b>One-Click Executive Summary</b></td>
+<td>Runs four batch analytics queries and returns a 3-sentence professional business brief in one click.</td>
+</tr>
+<tr>
+<td>📖 <b>Metric Definition Dictionary</b></td>
+<td>Business terms like "revenue" and "refund rate" map to precise SQL formulas — always consistent, always correct.</td>
+</tr>
+<tr>
+<td>🔍 <b>SQL Transparency</b></td>
+<td>Every answer shows the exact SQL query it ran, plus a plain-English explanation of that query.</td>
+</tr>
+<tr>
+<td>⚡ <b>Temporal Date Awareness</b></td>
+<td>The backend detects the dataset's date range and injects it into the AI context to prevent hallucinated time references.</td>
+</tr>
+<tr>
+<td>🛡️ <b>SQL Safety Layer</b></td>
+<td>All generated SQL is sanitized to block <code>DROP</code>, <code>DELETE</code>, <code>UPDATE</code>, and <code>INSERT</code> before execution.</td>
+</tr>
+</table>
+
+---
+
+## 🚀 Quick Start
 
 ### Prerequisites
 
@@ -34,18 +101,14 @@
 - **Node.js 18+** and **npm**
 - A free [Groq API key](https://console.groq.com/)
 
----
-
-### Step 1 — Clone the repository
+### 1️⃣ Clone the Repository
 
 ```bash
 git clone <your-repo-url>
 cd talk-to-data
 ```
 
----
-
-### Step 2 — Set up the backend
+### 2️⃣ Set Up the Backend
 
 ```bash
 cd backend
@@ -58,105 +121,112 @@ source venv/bin/activate
 pip install -r requirements.txt
 ```
 
-Create a `.env` file inside the `backend/` directory:
+Create a `.env` file inside `backend/`:
 
 ```bash
-# backend/.env
 GROQ_API_KEY=your_groq_api_key_here
 ```
 
-Start the backend server:
+Start the backend:
 
 ```bash
 uvicorn main:app --reload --port 8000
 ```
 
-The API will be available at `http://localhost:8000`.
+> API available at `http://localhost:8000`
 
----
-
-### Step 3 — Set up the frontend
-
-Open a new terminal window:
+### 3️⃣ Set Up the Frontend
 
 ```bash
 cd frontend
-
-# Install dependencies
 npm install
-
-# Start the React development server
 npm start
 ```
 
-The app will open automatically at `http://localhost:3000`.
+> App opens at `http://localhost:3000`
 
----
-
-### Step 4 — Generate sample data (optional)
-
-A sample data generator is provided:
+### 4️⃣ (Optional) Generate Sample Data
 
 ```bash
 cd sample_data
 python generate_data.py
 ```
 
-This creates a `sales_data.csv` file with realistic sales records you can upload immediately to test the app.
+Creates `sales_data.csv` with realistic sales records ready to upload.
 
 ---
 
-## Tech Stack
+## 🏗️ Architecture
 
-| Category | Technology |
-|---|---|
-| **Frontend** | React, Axios, Recharts, Vanilla CSS |
-| **Backend** | Python, FastAPI, Uvicorn |
-| **Database** | SQLite (in-memory, per session) |
-| **Data Processing** | Pandas |
-| **AI / LLM** | Groq API (`llama-3.3-70b-versatile`) |
-| **Environment** | python-dotenv |
-| **Validation** | Pydantic |
+The system uses a **multi-layered agentic pipeline** with a pre-computed temporal caching layer and robust privacy controls.
 
----
+```mermaid
+graph TD
+    User((User)) -->|Question| FE[Frontend - React]
+    FE -->|API Request| BE[Backend - FastAPI]
 
-## Usage Examples
+    subgraph "Backend Processing"
+        BE --> Router{Fast Path Router}
+        Router -->|Cache Hit| Agent3[Agent 3: Validator/Explainer]
+        Router -->|Cache Miss| Agent1[Agent 1: Intent Clarifier]
 
-### Uploading a dataset
+        Agent1 --> Agent2[Agent 2: SQL Generator]
+        Agent2 --> Safety[SQL Safety Check]
+        Safety -->|Pass| DB[(In-memory SQLite)]
+        DB --> Agent3
 
-1. Open `http://localhost:3000` in your browser.
-2. Drag and drop your `.csv` file onto the upload area, or click to browse.
-3. The app will show a confirmation of the detected columns and row count, along with any columns it automatically hid for privacy.
+        Agent3 -->|Final Answer| FE
+    end
 
----
-
-### Asking questions
-
-Once a file is loaded, type your question in the chat input and press Enter.
-
-**Example questions:**
-
-```
-What is total revenue by region?
-Show me the top 5 products by units sold.
-What was average order value in February?
-Compare Q1 revenue vs Q2 revenue.
-How many refunded orders do we have?
-Which month had the lowest total sales?
-What is our overall refund rate?
+    subgraph "Data Ingestion"
+        CSV[CSV File] --> PF[Privacy Filter]
+        PF -->|PII Removed| DBL[DB Loader]
+        DBL -->|Load| DB
+        DBL -->|Pre-compute| TemporalCache[(Temporal OLAP Cache)]
+        TemporalCache -.-> Router
+    end
 ```
 
+### 1️⃣ Data Ingestion & Security
+
+| Component | File | Responsibility |
+|-----------|------|----------------|
+| 🔒 Privacy Filter | `core/privacy_filter.py` | Automatically detects and strips PII (SSNs, emails, names) before data is stored |
+| 🗄️ DB Loader | `core/db_loader.py` | Manages in-memory SQLite lifecycle and session state |
+| ⚡ Temporal OLAP Cache | `core/db_loader.py` | Pre-computes min/max/mean/sum/std across Month, Quarter, Year at upload time — enables sub-millisecond temporal responses |
+
+### 2️⃣ Multi-Agent Query Pipeline
+
+Powered by **Groq (LLaMA 3.3 70B)** — a sequential chain where each agent has one job:
+
+| Agent | File | Role |
+|-------|------|------|
+| 🚦 Fast Path Router | `main.py` | Intercepts questions matching pre-computed cache stats — skips SQL generation entirely |
+| 🧠 Agent 1: Intent Clarifier | `agents/intent_clarifier.py` | Disambiguates questions, maps "business speak" to column names |
+| 💡 Agent 2: SQL Generator | `agents/sql_generator.py` | Translates clarified intent into optimized SQLite syntax |
+| 🛡️ SQL Safety Auditor | `core/sql_safety.py` | Blocks injection; enforces read-only queries |
+| ✅ Agent 3: Validator/Explainer | `agents/validator.py` | Executes query, returns **natural language answer** + **confidence score** + **key insight** |
+
+### 3️⃣ Business Logic & Frontend
+
+| Component | File | Role |
+|-----------|------|------|
+| 📐 Metric Dictionary | `core/metric_dict.py` | Central repo of business formulas (Revenue, Profit Margin, etc.) — ensures consistent LLM logic |
+| ⚛️ React SPA | `frontend/` | Chat-like interface with data visualizations via Recharts |
+
+### 🔒 Security Posture
+
+| Guarantee | How |
+|-----------|-----|
+| **Zero-Persistence** | Data lives only in-memory; wiped on session reset or server restart |
+| **Automated Anonymization** | PII blocklist prevents sensitive data from reaching the query engine or LLM |
+| **Read-Only Enforcement** | Execution layer + safety auditor forbid `INSERT`, `UPDATE`, `DELETE`, `DROP` |
+
 ---
 
-### One-click Executive Summary
+## 🔌 API Reference
 
-On the main chat screen (before asking any questions), click the **✨ Generate Executive Summary** button. The backend automatically runs batch analytics and returns a professional paragraph summarizing total revenue, best-performing region, worst-performing region, and top product.
-
----
-
-### Example API call (direct)
-
-**Upload a file:**
+**Upload a CSV:**
 ```bash
 curl -X POST http://localhost:8000/upload \
   -F "file=@sales_data.csv"
@@ -172,84 +242,59 @@ curl -X POST http://localhost:8000/query \
 **Example response:**
 ```json
 {
-  "answer": "The North region leads with $312,000 in revenue, followed by East at $289,000 and South at $201,000.",
+  "answer": "The North region leads with $312,000 in revenue, followed by East at $289,000.",
   "confidence": 0.92,
   "confidence_label": "High",
   "key_insight": "North outperforms South by 55%.",
-  "sql_used": "SELECT region, SUM(CASE WHEN status='completed' THEN amount ELSE 0 END) AS revenue FROM data GROUP BY region ORDER BY revenue DESC LIMIT 10",
+  "sql_used": "SELECT region, SUM(...) AS revenue FROM data GROUP BY region",
   "results": [
     {"region": "North", "revenue": 312000},
-    {"region": "East", "revenue": 289000},
-    {"region": "South", "revenue": 201000}
+    {"region": "East",  "revenue": 289000}
   ]
 }
 ```
 
-**Get metric definitions:**
+**Other endpoints:**
 ```bash
-curl http://localhost:8000/metrics
-```
-
-**Health check:**
-```bash
-curl http://localhost:8000/health
+curl http://localhost:8000/metrics   # Get metric definitions
+curl http://localhost:8000/health    # Health check
 ```
 
 ---
 
-## Architecture Notes
+## 🛠️ Tech Stack
 
-The system is structured as a clear separation between frontend, backend logic, and AI agents:
-
-```
-┌──────────────┐     HTTP/REST     ┌────────────────────────────────────┐
-│  React UI    │ ◄──────────────► │  FastAPI Backend                   │
-│  (port 3000) │                  │  (port 8000)                       │
-└──────────────┘                  │                                    │
-                                  │  ┌─────────────────────────────┐   │
-                                  │  │  Privacy Filter (PII strip) │   │
-                                  │  └──────────────┬──────────────┘   │
-                                  │                 ▼                  │
-                                  │  ┌─────────────────────────────┐   │
-                                  │  │  SQLite (in-memory engine)  │   │
-                                  │  └──────────────┬──────────────┘   │
-                                  │                 ▼                  │
-                                  │  ┌──────────────────────────────┐  │
-                                  │  │  AI Agent Pipeline (Groq)    │  │
-                                  │  │  1. Intent Clarifier         │  │
-                                  │  │  2. SQL Generator            │  │
-                                  │  │  3. Validator / Explainer    │  │
-                                  │  └──────────────────────────────┘  │
-                                  └────────────────────────────────────┘
-```
-
-**Data flow per question:**
-1. User types a question in the React chat UI.
-2. Backend's Intent Clarifier (Agent 1) interprets the question into a structured JSON intent.
-3. SQL Generator (Agent 2) writes a safe, validated SQL query against the in-memory SQLite database.
-4. The SQL safety layer blocks any destructive statements.
-5. SQLite executes the query and returns raw rows.
-6. Validator/Explainer (Agent 3) interprets the raw numbers into a plain-English narrative.
-7. The full response (answer, SQL used, results, confidence) is sent back to the React frontend.
+| Layer | Technology |
+|-------|------------|
+| **Frontend** | React, Axios, Recharts, Vanilla CSS |
+| **Backend** | Python, FastAPI, Uvicorn |
+| **Database** | SQLite (in-memory, per session) |
+| **Data Processing** | Pandas |
+| **AI / LLM** | Groq API — LLaMA 3.3 70B Versatile |
+| **Validation** | Pydantic |
 
 ---
 
-## Limitations
+## ⚠️ Limitations
 
-- **Session-only memory:** Data is stored in an in-memory SQLite database that resets when the backend server restarts. There is no persistent storage between server sessions.
-- **Single file per session:** Only one CSV file can be active at a time. Uploading a new file replaces the previous one.
-- **English-only queries:** The AI agent pipeline has only been tested with English-language questions.
-- **Sales-specific metrics:** The built-in metric dictionary (revenue, refund rate, average order value, etc.) is optimized for sales and e-commerce datasets. Queries on non-sales CSVs will work but may not benefit from predefined metric formulas.
-- **Date column assumption:** Advanced temporal queries (monthly/quarterly trends) assume a column named `date` in `YYYY-MM-DD` format exists in the dataset.
-- **No user authentication:** This is a prototype and has no multi-user session management.
+- **Session-only memory** — Data resets when the backend server restarts.
+- **Single file per session** — Uploading a new file replaces the previous one.
+- **English-only queries** — The agent pipeline has only been tested with English.
+- **Sales-optimized metrics** — Predefined formulas work best for sales/e-commerce datasets.
+- **Date column assumption** — Temporal queries assume a `date` column in `YYYY-MM-DD` format.
 
 ---
 
-## Future Improvements
+## 🔮 Future Improvements
 
-- **Temporal fast-path router:** Pre-compute statistical profiles (mean, min, max, std, sum) per month, quarter, and year at upload time, allowing simple temporal queries to be answered directly from cached data without generating SQL — saving API tokens and latency.
-- **Multi-file support:** Allow users to upload and query multiple datasets simultaneously with JOIN support.
-- **Persistent storage:** Replace the in-memory SQLite with a persistent database (PostgreSQL) so data survives server restarts.
-- **Multi-step analytical agent loop:** Enable the AI to run follow-up queries autonomously to perform root-cause analysis (e.g., "Why did revenue drop?" → runs 3 decomposing queries automatically).
-- **Export to PDF/CSV:** Allow users to export their chat history and AI-generated insights as a report.
-- **Custom metric definitions:** Let users define their own business metrics through the UI rather than editing Python code.
+- 🔁 **Multi-step analytical agent loop** — Let the AI run follow-up queries automatically for root-cause analysis
+- 📁 **Multi-file + JOIN support** — Query across multiple datasets simultaneously
+- 💾 **Persistent storage** — Replace in-memory SQLite with PostgreSQL
+- 📤 **Export to PDF/CSV** — Export chat history and AI insights as a report
+- ⚙️ **Custom metric definitions** — Define your own business formulas through the UI
+
+---
+
+<div align="center">
+<sub>Built with ❤️ by <b>Gradient Descenters</b></sub>
+</div>
