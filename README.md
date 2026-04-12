@@ -16,27 +16,8 @@
 
 <br/>
 
-[🚀 Quick Start](#-quick-start) • [✨ Features](#-features) • [🏗️ Architecture](#-architecture) • [📸 Screenshots](#-screenshots) • [🔌 API Reference](#-api-reference) • [⚠️ Limitations](#-limitations)
+[🚀 Quick Start](#-quick-start) • [✨ Features](#-features) • [🎨 See It In Action](#-see-it-in-action) • [🏗️ Architecture](#-architecture) • [🔌 API Reference](#-api-reference) • [⚠️ Limitations](#-limitations)
 
-</div>
-
----
-
-## 📸 Screenshots
-
-<div align="center">
-<table>
-<tr>
-<td align="center" width="50%">
-<img src="screenshot_upload.png" width="380" alt="Upload Screen"/>
-<br/><sub><b>📂 CSV Upload with PII Detection</b></sub>
-</td>
-<td align="center" width="50%">
-<img src="screenshot_dashboard.png" width="640" alt="Dashboard Screen"/>
-<br/><sub><b>💬 Chat Interface with Executive Summary</b></sub>
-</td>
-</tr>
-</table>
 </div>
 
 ---
@@ -153,6 +134,22 @@ python generate_data.py
 ```
 
 Creates `sales_data.csv` with realistic sales records ready to upload.
+
+---
+
+## 🎨 See It In Action
+
+<div align="center">
+
+<img src="sample_data/Uploadpage.png" width="480" alt="Upload Screen"/>
+<br/><sub><b>📂 CSV Upload with automatic PII Detection</b></sub>
+
+<br/><br/>
+
+<img src="sample_data/Dashboard.png" width="900" alt="Dashboard Screen"/>
+<br/><sub><b>💬 Chat Interface with Executive Summary</b></sub>
+
+</div>
 
 ---
 
