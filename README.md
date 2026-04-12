@@ -163,6 +163,22 @@ python generate_data.py
 
 ---
 
+## 🎨 See It In Action
+
+<div align="center">
+
+<img src="sample_data/Uploadpage.png" width="480" alt="Upload Screen"/>
+<br/><sub><b>📂 CSV Upload with automatic PII Detection</b></sub>
+
+<br/><br/>
+
+<img src="sample_data/Dashboard.png" width="900" alt="Dashboard Screen"/>
+<br/><sub><b>💬 Chat Interface with Executive Summary</b></sub>
+
+</div>
+
+---
+
 ## 🏗️ Architecture
 
 The system uses a **multi-layered agentic pipeline** with a pre-computed temporal caching layer and robust privacy controls.
