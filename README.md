@@ -1,8 +1,6 @@
 <div align="center">
 
-<img src="https://img.shields.io/badge/Talk%20to%20Data-AI%20Analytics-6C63FF?style=for-the-badge&logo=databricks&logoColor=white" alt="Talk to Data"/>
-
-# 🗣️ Talk to Your Data
+#  Talk to Data
 
 **Ask questions about your data in plain English. Get instant, verified answers.**
 
@@ -16,27 +14,16 @@
 
 <br/>
 
-[🚀 Quick Start](#-quick-start) • [✨ Features](#-features) • [🏗️ Architecture](#-architecture) • [📸 Screenshots](#-screenshots) • [🔌 API Reference](#-api-reference) • [⚠️ Limitations](#-limitations)
+[🚀 Quick Start](#-quick-start) • [✨ Features](#-features) • [🎨 See It In Action](#-see-it-in-action) • [🏗️ Architecture](#-architecture) • [🔌 API Reference](#-api-reference) • [⚠️ Limitations](#-limitations)
 
 </div>
 
 ---
 
-## 📸 Screenshots
-
 <div align="center">
-<table>
-<tr>
-<td align="center" width="50%">
-<img src="screenshot_upload.png" width="380" alt="Upload Screen"/>
-<br/><sub><b>📂 CSV Upload with PII Detection</b></sub>
-</td>
-<td align="center" width="50%">
-<img src="screenshot_dashboard.png" width="640" alt="Dashboard Screen"/>
-<br/><sub><b>💬 Chat Interface with Executive Summary</b></sub>
-</td>
-</tr>
-</table>
+
+&nbsp;&nbsp;&nbsp;[![Live Demo](https://img.shields.io/badge/Live%20Demo-6C63FF?style=for-the-badge&logo=rocket&logoColor=white)](https://caring-elegance-production-1386.up.railway.app)&nbsp;&nbsp;&nbsp;[![View Source](https://img.shields.io/badge/View%20Source-181717?style=for-the-badge&logo=github&logoColor=white)](https://github.com/shabdagya/talk-to-data)
+
 </div>
 
 ---
@@ -104,7 +91,7 @@
 ### 1️⃣ Clone the Repository
 
 ```bash
-git clone <your-repo-url>
+git clone https://github.com/shabdagya/talk-to-data.git
 cd talk-to-data
 ```
 
@@ -145,14 +132,34 @@ npm start
 
 > App opens at `http://localhost:3000`
 
-### 4️⃣ (Optional) Generate Sample Data
+### 4️⃣ Try It With Sample Data
+
+A ready-to-use dataset is already included in the repo at [`sample_data/sales_data.csv`](https://github.com/shabdagya/talk-to-data/blob/main/sample_data/sales_data.csv). Just upload it directly on the app to get started instantly.
+
+> 💡 **Tip:** This is the recommended way to explore the app — it has regions, products, channels, and dates so all example queries work out of the box.
+
+If you'd rather regenerate it fresh:
 
 ```bash
 cd sample_data
 python generate_data.py
 ```
 
-Creates `sales_data.csv` with realistic sales records ready to upload.
+---
+
+## 🎨 See It In Action
+
+<div align="center">
+
+<img src="sample_data/Uploadpage.png" width="480" alt="Upload Screen"/>
+<br/><sub><b>📂 CSV Upload with automatic PII Detection</b></sub>
+
+<br/><br/>
+
+<img src="sample_data/Dashboard.png" width="900" alt="Dashboard Screen"/>
+<br/><sub><b>💬 Chat Interface with Executive Summary</b></sub>
+
+</div>
 
 ---
 
