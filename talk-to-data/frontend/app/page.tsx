@@ -166,7 +166,7 @@ function Navbar({ screen, onReset, onDatasetReport, datasetReportLoading, schema
           </div>
         </div>
         <div className="flex items-center gap-3">
-          {screen === "chat" ? (
+          {screen === "chat" && (
             <>
               <button className="flex items-center gap-2 px-3 py-2 rounded-lg border border-white/20 text-white/70 text-sm hover:bg-white/5 transition-colors">
                 <Database className="w-4 h-4" />
@@ -194,10 +194,6 @@ function Navbar({ screen, onReset, onDatasetReport, datasetReportLoading, schema
                 Reset
               </button>
             </>
-          ) : (
-            <button className="px-4 py-2 rounded-lg border border-white text-white text-sm font-medium hover:bg-white hover:text-purple-900 transition-colors">
-              Sign In
-            </button>
           )}
         </div>
       </nav>
@@ -296,12 +292,6 @@ function LandingPage({ onNavigate }: { onNavigate: (screen: Screen) => void }) {
             className="px-8 py-3.5 rounded-xl bg-purple-600 text-white font-semibold hover:bg-purple-500 hover:scale-105 transition-all"
           >
             Upload CSV
-          </button>
-          <button
-            onClick={() => onNavigate("chat")}
-            className="px-8 py-3.5 rounded-xl border border-white text-white font-medium hover:bg-white hover:text-gray-900 transition-all"
-          >
-            Try Demo
           </button>
         </div>
 
