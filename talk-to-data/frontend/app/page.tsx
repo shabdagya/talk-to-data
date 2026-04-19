@@ -748,7 +748,7 @@ function AIResponseCard({ msg, blockedColumns, onNewMessage }: { msg: any, block
           )}
 
           {/* Chart */}
-          {msg.chartData && msg.chart_config?.type !== "none" && (
+          {msg.chartData && Array.isArray(msg.chartData) && msg.chartData.length > 0 && msg.chart_config && msg.chart_config.type && msg.chart_config.type !== "none" && (
             <div className="border-t border-white/[0.08] pt-4 mt-4">
               <p className="text-white/30 text-[9px] uppercase tracking-wider mb-3">
                 {msg.chart_config?.type || "Chart"} Display
