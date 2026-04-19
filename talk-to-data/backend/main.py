@@ -134,8 +134,30 @@ def _try_cache_route(question: str, profile: dict) -> dict | None:
 
     q = question.lower()
 
-    # ── Detect range queries ───────────────────────────────────────────────
-    # If the user is asking about a range, the fast path cannot handle it.
+    # ── Bypass: complex queries the cache cannot handle ────────────────────
+    # Comparisons (e.g. "compare march and july", "Q1 vs Q2")
+    _COMPARE_KEYWORDS = {"compare", "vs", "versus", "difference", "differ",
+                         "against", "relative to"}
+    if any(kw in q for kw in _COMPARE_KEYWORDS):
+        return None
+
+    # Group-by / dimensional breakdowns (e.g. "by region", "per product")
+    if re.search(r'\b(by|per|each|every|across)\s+\w+', q):
+        return None
+
+    # Chart / visualization requests (e.g. "plot a graph", "show chart")
+    _CHART_KEYWORDS = {"chart", "graph", "plot", "visualize", "visualise",
+                       "diagram", "histogram"}
+    if any(kw in q for kw in _CHART_KEYWORDS):
+        return None
+
+    # Multiple time references (e.g. "march and july", "Q1 and Q3")
+    _ALL_TIME_NAMES = set(_MONTH_MAP.keys()) | set(_QUARTER_MAP.keys())
+    matched_times = [t for t in _ALL_TIME_NAMES if t in q]
+    if len(matched_times) >= 2:
+        return None
+
+    # Range queries (e.g. "from jan to march", "between Q1 and Q3")
     if re.search(r'\b(from|between)\b.*\b(to|and|through|until|-)\b', q):
         return None
 
