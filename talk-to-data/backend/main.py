@@ -45,7 +45,7 @@ app = FastAPI(title="Talk to Data", version="1.0.0", lifespan=lifespan)
 # CORS Middleware
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:3000", "https://*.vercel.app", "https://caring-elegance-production-1386.up.railway.app"],
+    allow_origins=["*"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
