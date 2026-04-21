@@ -22,7 +22,7 @@
 
 <div align="center">
 
-&nbsp;&nbsp;&nbsp;[![Live Demo](https://img.shields.io/badge/Live%20Demo-6C63FF?style=for-the-badge&logo=rocket&logoColor=white)](https://caring-elegance-production-1386.up.railway.app)&nbsp;&nbsp;&nbsp;[![View Source](https://img.shields.io/badge/View%20Source-181717?style=for-the-badge&logo=github&logoColor=white)](https://github.com/shabdagya/talk-to-data)
+&nbsp;&nbsp;&nbsp;[![Live Demo](https://img.shields.io/badge/Live%20Demo-6C63FF?style=for-the-badge&logo=rocket&logoColor=white)](https://talk-to-data-backup.vercel.app/)&nbsp;&nbsp;&nbsp;[![View Source](https://img.shields.io/badge/View%20Source-181717?style=for-the-badge&logo=github&logoColor=white)](https://github.com/shabdagya/talk-to-data)
 
 </div>
 
