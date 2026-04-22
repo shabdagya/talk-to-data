@@ -11,11 +11,23 @@ from dotenv import load_dotenv
 # Load env vars
 load_dotenv()
 
+import os
+from fastapi.responses import StreamingResponse
+from core.pdf_generator import pdf_generator
+from core.dataset_summarizer import dataset_summarizer
+from groq import Groq
+from datetime import datetime
+
+# Setup core Groq client
+groq_client = Groq(api_key=os.environ.get("GROQ_API_KEY"))
+
 # Import project modules
 from core.privacy_filter import privacy_filter
 from core.db_loader import db_loader
 from core.metric_dict import metric_dict
 from core.sql_safety import sql_safety
+from core.conversation_memory import conversation_memory
+from core.chart_selector import chart_selector
 from agents.intent_clarifier import intent_clarifier
 from agents.sql_generator import sql_generator
 from agents.validator import validator_explainer
@@ -33,7 +45,7 @@ app = FastAPI(title="Talk to Data", version="1.0.0", lifespan=lifespan)
 # CORS Middleware
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:3000", "https://*.vercel.app", "https://caring-elegance-production-1386.up.railway.app"],
+    allow_origins=["*"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -121,6 +133,33 @@ def _try_cache_route(question: str, profile: dict) -> dict | None:
         return None
 
     q = question.lower()
+
+    # ── Bypass: complex queries the cache cannot handle ────────────────────
+    # Comparisons (e.g. "compare march and july", "Q1 vs Q2")
+    _COMPARE_KEYWORDS = {"compare", "vs", "versus", "difference", "differ",
+                         "against", "relative to"}
+    if any(kw in q for kw in _COMPARE_KEYWORDS):
+        return None
+
+    # Group-by / dimensional breakdowns (e.g. "by region", "per product")
+    if re.search(r'\b(by|per|each|every|across)\s+\w+', q):
+        return None
+
+    # Chart / visualization requests (e.g. "plot a graph", "show chart")
+    _CHART_KEYWORDS = {"chart", "graph", "plot", "visualize", "visualise",
+                       "diagram", "histogram"}
+    if any(kw in q for kw in _CHART_KEYWORDS):
+        return None
+
+    # Multiple time references (e.g. "march and july", "Q1 and Q3")
+    _ALL_TIME_NAMES = set(_MONTH_MAP.keys()) | set(_QUARTER_MAP.keys())
+    matched_times = [t for t in _ALL_TIME_NAMES if t in q]
+    if len(matched_times) >= 2:
+        return None
+
+    # Range queries (e.g. "from jan to march", "between Q1 and Q3")
+    if re.search(r'\b(from|between)\b.*\b(to|and|through|until|-)\b', q):
+        return None
 
     # Must contain at least one statistical intent keyword
     if not any(kw in q for kw in _STAT_KEYWORDS):
@@ -240,6 +279,15 @@ async def query_data(req: QueryRequest):
     cache_result = _try_cache_route(req.question, db_loader.get_temporal_profile())
     if cache_result is not None:
         explanation = validator_explainer.explain_from_cache(req.question, cache_result)
+        
+        conversation_memory.add_turn(
+            question=req.question,
+            clarified_question=req.question,
+            sql="-- Served from pre-computed temporal cache. No previous SQL statement exists.",
+            answer=explanation.get("answer", ""),
+            key_insight=explanation.get("key_insight", "")
+        )
+        
         return {
             "answer": explanation.get("answer", ""),
             "confidence": explanation.get("confidence", 0.95),
@@ -259,7 +307,8 @@ async def query_data(req: QueryRequest):
     metric_dict_str = metric_dict.to_prompt_string()
     
     # Phase 1: Clarify intent
-    clarified = intent_clarifier.clarify(req.question, schema, metric_dict_str)
+    context = conversation_memory.get_context_string()
+    clarified = intent_clarifier.clarify(req.question, schema, metric_dict_str, context)
     
     # Phase 2: Generate SQL
     if clarified and clarified.get("metric"):
@@ -267,7 +316,8 @@ async def query_data(req: QueryRequest):
         if formula:
             clarified["metric_sql_formula"] = formula
             
-    sql_result = sql_generator.generate(clarified, schema)
+    last_sql = conversation_memory.get_last_sql()
+    sql_result = sql_generator.generate(clarified, schema, last_sql)
     if not sql_result.get("success"):
         return JSONResponse(
             status_code=422,
@@ -294,6 +344,16 @@ async def query_data(req: QueryRequest):
     # Phase 5: Interpretation
     explanation = validator_explainer.explain(req.question, sql_result["sql"], results)
     
+    conversation_memory.add_turn(
+        question=req.question,
+        clarified_question=clarified.get("clarified_question", req.question),
+        sql=sql_result["sql"],
+        answer=explanation.get("answer", ""),
+        key_insight=explanation.get("key_insight", "")
+    )
+    
+    chart_config = chart_selector.select(req.question, clarified, results)
+    
     return {
         "answer": explanation.get("answer", ""),
         "confidence": explanation.get("confidence", 0.0),
@@ -305,7 +365,8 @@ async def query_data(req: QueryRequest):
         "results": results,
         "clarified_intent": clarified,
         "success": True,
-        "cache_hit": False
+        "cache_hit": False,
+        "chart_config": chart_config
     }
 
 @app.get("/schema")
@@ -324,7 +385,15 @@ async def reset_session():
     db_loader.reset()
     app.state.schema = None
     app.state.blocked_columns = []
+    conversation_memory.clear()
     return {"success": True, "message": "Session reset"}
+
+@app.get("/conversation/history")
+async def get_conversation_history():
+    return {
+        "history": conversation_memory.history,
+        "turn_count": len(conversation_memory.history)
+    }
 
 @app.get("/metrics")
 async def get_metrics():
@@ -371,3 +440,41 @@ async def health_check():
         "status": "ok", 
         "schema_loaded": db_loader.is_loaded()
     }
+
+@app.post("/export/pdf/answer")
+async def export_answer_pdf(report_data: dict):
+    try:
+        pdf_bytes = pdf_generator.generate_answer_report(report_data)
+        return StreamingResponse(
+            io.BytesIO(pdf_bytes),
+            media_type="application/pdf",
+            headers={"Content-Disposition": 'attachment; filename="answer-report.pdf"'}
+        )
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+@app.post("/export/pdf/dataset")
+async def export_dataset_pdf():
+    try:
+        if not db_loader.is_loaded():
+            raise HTTPException(status_code=400, detail="No file uploaded yet")
+        
+        blocked_columns = getattr(app.state, 'blocked_columns', [])
+        schema = db_loader.get_schema()
+        
+        summary_data = dataset_summarizer.summarize(db_loader, metric_dict, groq_client)
+        summary_data["dataset_name"] = schema.get("table_name", "dataset")
+        summary_data["row_count"] = schema.get("row_count", 0)
+        summary_data["blocked_columns"] = blocked_columns
+        summary_data["generated_at"] = datetime.now().strftime("%d %B %Y at %H:%M")
+        
+        pdf_bytes = pdf_generator.generate_dataset_report(summary_data)
+        return StreamingResponse(
+            io.BytesIO(pdf_bytes),
+            media_type="application/pdf",
+            headers={"Content-Disposition": 'attachment; filename="dataset-report.pdf"'}
+        )
+    except HTTPException:
+        raise
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))

@@ -9,7 +9,7 @@ MODEL = "llama-3.3-70b-versatile"
 class IntentClarifier:
     """Interprets the user's question and returns a structured JSON object."""
 
-    def clarify(self, question: str, schema: dict, metric_dict_str: str) -> dict:
+    def clarify(self, question: str, schema: dict, metric_dict_str: str, conversation_context: str = "") -> dict:
         from core.metric_dict import metric_dict
 
         client = Groq()
@@ -20,7 +20,20 @@ class IntentClarifier:
             if col["name"] in schema.get("sample_values", {}):
                 sample_values_text = f" (Sample values: {schema['sample_values'][col['name']]})"
             schema_lines.append(f"- {col['name']} ({col['type']}){sample_values_text}")
-        schema_text = "\\n".join(schema_lines)
+        schema_text = "\n".join(schema_lines)
+
+        memory_rules = f"""
+{conversation_context}
+
+MEMORY RULES:
+- If the user's question uses words like "that", "it", "those", "same", "also",
+  "now filter", "break that down", "why did", "compare that" — they are referring
+  to the previous question's context
+- Carry forward any filters, dimensions, or time ranges from previous turns
+  unless the user explicitly changes them
+- If the user says "now filter by X" — keep all previous filters and add X
+- If the user says "why did X drop" — use the same metric and time context as before
+""" if conversation_context else ""
 
         system_prompt = f"""
 You are an intent clarifier for a SQL data analytics chatbot.
@@ -32,7 +45,7 @@ DATABASE SCHEMA:
 {metric_dict_str}
 
 {metric_dict.get_column_context(schema)}
-
+{memory_rules}
 RULES:
 - Resolve time: "last month" → actual YYYY-MM, "this year" → current year, "Q3" → months 7,8,9
 - Resolve "top" → default 5 if N not specified

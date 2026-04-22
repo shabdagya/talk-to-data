@@ -5,3 +5,4 @@ groq
 pandas
 python-dotenv
 numpy
+reportlab

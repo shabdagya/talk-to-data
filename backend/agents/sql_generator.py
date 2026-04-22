@@ -10,24 +10,32 @@ MODEL = "llama-3.3-70b-versatile"
 class SQLGenerator:
     """Generates SQLite SQL statements based on clarified intent."""
 
-    def generate(self, clarified_intent: dict, schema: dict) -> dict:
+    def generate(self, clarified_intent: dict, schema: dict, last_sql: str = None) -> dict:
         client = Groq()
 
         schema_lines = [f"Table name: {schema['table_name']}"]
         for col in schema['columns']:
             schema_lines.append(f"- {col['name']} ({col['type']})")
-        schema_text = "\\n".join(schema_lines)
+        schema_text = "\n".join(schema_lines)
 
         limit_val = clarified_intent.get('limit')
         if not limit_val:
             limit_val = 10
+
+        memory_block = f"""
+PREVIOUS SQL FOR REFERENCE:
+{last_sql}
+
+If the current intent is a follow-up or refinement, use this as a base
+and modify only what changed. Keep the same table, same joins if any.
+""" if last_sql else ""
 
         system_prompt = f"""
 You are a SQLite SQL query generator. Write ONE SELECT query only.
 
 SCHEMA:
 {schema_text}
-
+{memory_block}
 STRICT RULES:
 1. Only SELECT statements. Never DROP, DELETE, UPDATE, INSERT, ALTER.
 2. Table name is always: data
@@ -70,6 +78,17 @@ RETURN EXACTLY:
                     
                 result = json.loads(response_text.strip())
                 sql = result.get('sql', '')
+                
+                # Guard: LLM sometimes emits {placeholder} template syntax
+                if '{' in sql or '}' in sql:
+                    if attempt == 0:
+                        continue  # retry
+                    return {
+                        "sql": None,
+                        "explanation": None,
+                        "success": False,
+                        "error": "Generated SQL contained template placeholders. Please rephrase your question more specifically."
+                    }
                 
                 safety_check = sql_safety.check(sql)
                 if not safety_check['safe']:

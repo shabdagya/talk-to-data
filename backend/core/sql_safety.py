@@ -19,8 +19,8 @@ class SQLSafetyChecker:
         """Checks if the SQL starts with SELECT and contains no blocked keywords."""
         safe_sql = self.sanitize(sql)
         
-        if not safe_sql.upper().startswith('SELECT'):
-            return {"safe": False, "reason": "Query must start with SELECT"}
+        if not (safe_sql.upper().startswith('SELECT') or safe_sql.upper().startswith('WITH')):
+            return {"safe": False, "reason": "Query must start with SELECT or WITH"}
             
         upper_sql = safe_sql.upper()
         
